@@ -47,13 +47,13 @@
                             <!-- comment card -->
                             <div v-for="(review, index) in reviews" :key="index" class="py-9 w-full flex flex-col-reverse border-b border-[#ebe6e7] md:flex-row gap-2">
                                 <div class="w-full md:w-2/6 flex md:block">
-                                    <div class="text-[#101828] text-sm font-medium">User name</div>
+                                    <div class="text-[#101828] text-sm font-medium">{{ review.user.name }}</div>
                                     <div
                                         class="text-[#6a7384] text-sm border-l border-[#ebe6e7] pl-4 ml-4 md:border-none md:pl-0 md:ml-0">
-                                        Date</div>
+                                        {{ review.created_at }}</div>
                                 </div>
                                 <div class="w-full md:w-3/4">
-                                    <div class="text-[#6a7384] text-sm"> description</div>
+                                    <div class="text-[#6a7384] text-sm"> {{ review.text }}</div>
                                 </div>
                             </div>
                         </div>
@@ -101,8 +101,7 @@ const send_message = async () => {
         await axios.post(`/api/save-comment`, data)
         .then(res => {
             new_message.value = '';
-            // Optionally push, though broadcast will also deliver
-            reviews.value.push(res.data);
+            reviews.value.push(res.data.data);
         });
     } catch (e) {
         console.log(e);
@@ -113,6 +112,17 @@ onMounted(() => {
     if(props.comments.length > 0) {
         reviews.value = props.comments;
     }
+
+    // Listen for new comments via Pusher
+    window.Echo.channel(`product.${props.product.id}`)
+      .listen('CommentPosted', (e) => {
+        console.log(e);
+        // Check if the comment already exists by ID
+        const exists = reviews.value.some(comment => comment.id === e.comment.id);
+        if (!exists) {
+            reviews.value.push(e.comment);
+        }
+    });
 })
 </script>
 <style scoped>
