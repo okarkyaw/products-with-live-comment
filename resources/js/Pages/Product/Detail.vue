@@ -50,7 +50,7 @@
                                     <div class="text-[#101828] text-sm font-medium">{{ review.user.name }}</div>
                                     <div
                                         class="text-[#6a7384] text-sm border-l border-[#ebe6e7] pl-4 ml-4 md:border-none md:pl-0 md:ml-0">
-                                        {{ review.created_at }}</div>
+                                        {{ formatDate(review.created_at) }}</div>
                                 </div>
                                 <div class="w-full md:w-3/4">
                                     <div class="text-[#6a7384] text-sm"> {{ review.text }}</div>
@@ -109,6 +109,15 @@ const send_message = async () => {
     } catch (e) {
         console.log(e);
     }
+}
+
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 }
 
 onMounted(() => {
