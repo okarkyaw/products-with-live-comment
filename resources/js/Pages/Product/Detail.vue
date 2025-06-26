@@ -8,7 +8,7 @@
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
                     Product Detail
                 </h2>
-                <a :href="`/products/${product.id}/edit`" class="bg-blue-500 text-white px-4 py-2 rounded">Update
+                <a v-show="authId == product.user_id" :href="`/products/${product.id}/edit`" class="bg-blue-500 text-white px-4 py-2 rounded">Update
                     Product</a>
             </div>
         </template>
@@ -79,6 +79,9 @@ const props = defineProps({
     },
     comments: {
         type: Array
+    },
+    authId: {
+        type: Number
     }
 });
 const reviews = ref([]);

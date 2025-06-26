@@ -8,6 +8,7 @@ use App\Repositories\CommentRepository;
 use App\Repositories\ProductRepository;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -59,30 +60,40 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(int $id)
     {
         $product = $this->productRepository->find($id);
         $comments= $this->commentRepository->getByProductId($id);
+        $authUserId = Auth::user()->id;
         return Inertia::render('Product/Detail', [
             'product' => $product,
-            'comments'=> $comments
+            'comments'=> $comments,
+            'authId'  => $authUserId
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(int $id)
     {
-        //
+        $product = $this->productRepository->find($id);
+        return Inertia::render('Product/CreateEdit', [
+            'initialProduct' => $product
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, int $id)
     {
-        //
+        $product = $this->productRepository->find($id);
+        $this->productService->update($request, $product);
+        return response()->json([
+            'message' => 'Successfully updated product.',
+            'status'  => 'success',
+        ]);
     }
 
     /**

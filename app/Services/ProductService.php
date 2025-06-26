@@ -17,4 +17,14 @@ class ProductService
         }
         return Product::create($data);
     }
+    
+    public function update($request, Product $product)
+    {
+        $data = $request->all();
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->store('products', 'public');
+            $data['image'] = $image;
+        }
+        $product->update($data);
+    }
 }

@@ -1,7 +1,7 @@
 <template>
     <div v-if="product" @click="gotoTutorDetails" class="px-5 py-3 w-full shadow-md cursor-pointer hover:bg-primary-light-blue-25 relative">
         <div class="w-full mb-6">
-            <img :src="`/storage/${product.image}`" alt="product image" class="rounded-2xl md-profile" />
+            <img :src="`/storage/${product.image}`" alt="product image" class=" min-h-72 max-h-72 rounded-2xl md-profile" />
         </div>
         <div class="space-y-2">
             <div class="flex items-center gap-2 justify-between">

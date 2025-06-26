@@ -30,7 +30,7 @@
                             <InputLabel for="name" value="Image" />
 
                             <TextInput id="image" type="file" @change="handleImageUpload" class="mt-1 block w-full"
-                                required autofocus autocomplete="image" />
+                                :required="product.id ? false : true" autofocus autocomplete="image" />
 
                             <!-- Preview if it's a new file -->
                             <div v-if="previewImage" class="mt-2">
@@ -140,15 +140,14 @@ const createUpdate = () => {
     } else {
         axios.post('/products', formData)
             .then(res => {
-                console.log(res);
-                window.location.href = `/products/${res.data.id}`
+                window.location.href = `/products/${res.data.data.id}`
             })
     }
 }
 
 onMounted(() => {
     if (props.initialProduct) {
-        product.value = JSON.parse(props.initialProduct)
+        product.value = props.initialProduct;
     }
 })
 
